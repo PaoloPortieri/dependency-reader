@@ -17,7 +17,8 @@
     >
       <fa-icon icon="bars"></fa-icon>
     </a>
-    <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="account !== null">
+    <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed">
+    <!-- <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="account !== null"> -->
       <ul class="navbar-nav ms-auto">
         <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <a class="nav-link" routerLink="/" (click)="collapseNavbar()">
@@ -28,8 +29,8 @@
           </a>
         </li>
         <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
+        <!-- *ngSwitchCase="true" -->
         <li
-          *ngSwitchCase="true"
           ngbDropdown
           class="nav-item dropdown pointer"
           display="dynamic"
@@ -44,6 +45,12 @@
           </a>
           <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="entity-menu">
             <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
+            <li >
+              <a class="dropdown-item" routerLink="dep-reader" routerLinkActive="active" (click)="collapseNavbar()">
+                <fa-icon icon="book" [fixedWidth]="true"></fa-icon>
+                <span>Dependency Reader</span>
+              </a>
+            </li>
           </ul>
         </li>
         <li
@@ -87,18 +94,19 @@
             </span>
           </a>
           <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="account-menu">
-            <li *ngSwitchCase="true">
+            <!-- <li *ngSwitchCase="true"> -->
+              <li>
               <a class="dropdown-item" (click)="logout()" id="logout" data-cy="logout">
                 <fa-icon icon="sign-out-alt" [fixedWidth]="true"></fa-icon>
                 <span>Sign out</span>
               </a>
             </li>
-            <li *ngSwitchCase="false">
+            <!-- <li *ngSwitchCase="false">
               <a class="dropdown-item" (click)="login()" id="login" data-cy="login">
                 <fa-icon icon="sign-in-alt" [fixedWidth]="true"></fa-icon>
                 <span>Sign in</span>
               </a>
-            </li>
+            </li> -->
           </ul>
         </li>
       </ul>
