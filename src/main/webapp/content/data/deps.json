@@ -1,0 +1,54 @@
+[
+  {
+    "name": "Project Name",
+    "groupId": "Group ID",
+    "artifactId": "Artifact ID",
+    "version": "version",
+    "scope": 0,
+    "dependencies": ["Dependency artifact ID", "Dependency artifact ID", "..."],
+    "modules": [
+      {
+        "artifactId": "Module Artifcact ID 1",
+        "dependencies": ["Dependency artifact ID", "Dependency artifact ID", "..."]
+      },
+      {
+        "artifactId": "Module Artifcact 2",
+        "dependencies": ["Module Artifcact 2", "Dependency artifact ID", "..."]
+      }
+    ],
+    "errors": [
+      {
+        "severity": 1,
+        "message": "Error Message"
+      }
+    ]
+  },
+  {
+    "name": "Project Name 2",
+    "groupId": "Group ID 2",
+    "artifactId": "Artifact ID 2",
+    "version": "version",
+    "scope": 0,
+    "dependencies": ["Dependency artifact Project2 ID", "Dependency artifact Project2 ID", "..."],
+    "modules": [
+      {
+        "artifactId": "Module Artifcact Project2 1",
+        "dependencies": ["Dependency artifact ID", "Dependency artifact ID", "..."]
+      },
+      {
+        "artifactId": "Module Artifcact Project2 2",
+        "dependencies": ["Module Artifcact 2", "Dependency artifact ID", "..."]
+      }
+    ],
+    "errors": [
+      {
+        "severity": 1,
+        "message": "Error Message"
+      },
+      {
+        "severity": 2,
+        "message": "Warning Message"
+      }
+    ]
+  }
+]

@@ -9,6 +9,7 @@ import { SharedModule } from 'app/shared/shared.module';
   declarations: [],
   imports: [
     SharedModule,
+    CommonModule,
     DepReaderRoutingModule
   ]
 })

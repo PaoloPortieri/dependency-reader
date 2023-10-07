@@ -13,14 +13,12 @@ import { JsonRootArray } from 'app/entities/dep-reader/deps.model';
 @Injectable({ providedIn: 'root' })
 export class DepsRetrieverService {
   jsonData!: JsonRootArray;
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
 
-  load(): void {
-    this.http.get("assets/data/deps.json").subscribe((data: any) => {
+  }
 
-      console.log("caricamento json:", data);
-      this.jsonData = data;
-    });
+  load(): Observable<any> {
+    return this.http.get("assets/data/deps.json");
   }
 }
 

@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { DepReaderModule } from './dep-reader/dep-reader.module';
 
 @NgModule({
   imports: [
@@ -12,7 +11,6 @@ import { DepReaderModule } from './dep-reader/dep-reader.module';
         loadChildren: () => import('./dep-reader/dep-reader.module').then(m => m.DepReaderModule),
       },
     ]),
-    DepReaderModule,
   ],
 })
 export class EntityRoutingModule { }
