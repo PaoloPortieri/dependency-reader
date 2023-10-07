@@ -1,3 +1,4 @@
+/* eslint-disable curly */
 /* eslint-disable no-console */
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -7,7 +8,7 @@ import { Account } from 'app/core/auth/account.model';
 import { AccountService } from 'app/core/auth/account.service';
 import { AuthServerProvider } from 'app/core/auth/auth-jwt.service';
 import { HttpClient } from '@angular/common/http';
-import { JsonRootArray } from 'app/entities/dep-reader/deps.model';
+import { JsonRoot, JsonRootArray, ProjectInfo, TreePrimeNg } from 'app/entities/dep-reader/deps.model';
 
 
 @Injectable({ providedIn: 'root' })
@@ -20,8 +21,50 @@ export class DepsRetrieverService {
   load(): Observable<any> {
     return this.http.get("assets/data/deps.json");
   }
+
+  convertJsonRootArrayToPrimeNgTree(input?: JsonRootArray): TreePrimeNg | null {
+    if (!input) return null;
+
+
+    return null;
+  }
+
+  extractProjectList(input?: JsonRoot[]): ProjectInfo[] {
+    return input?.map(el => ({ name: el.name, groupId: el.groupId, artifactId: el.artifactId, version: el.version, scope: el.scope })) ?? [];
+  }
 }
 
+
+
+/*
+{
+  key: '0',
+  label: 'Project Name',  // nome progetto
+  data: 'PROGETTI',
+  icon: 'pi pi-fw pi-inbox',
+  children: [{
+    key: '0-0',
+    label: 'Module Artifcact ID',  // nome modulo
+    data: 'MODULI',
+    icon: 'pi pi-fw pi-inbox',
+
+    children: [{
+      key: '0-0-0',
+      label: 'Dependency artifact ID',  // nome dipendenza
+      data: 'DIPENDENZE',
+      icon: 'pi pi-fw pi-inbox',
+    },
+    {
+      key: '0-0-1',
+      label: 'Dependency artifact 2',  // nome dipendenza
+      data: 'DIPENDENZE',
+      icon: 'pi pi-fw pi-inbox',
+    }]
+    }
+  ]
+      {
+
+        */
 /*
 
 [

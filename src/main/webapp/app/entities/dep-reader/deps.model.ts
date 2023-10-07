@@ -1,3 +1,5 @@
+// STRUTTURA JSON INPUT
+
 export type JsonRootArray = JsonRoot[]
 
 export interface JsonRoot {
@@ -19,4 +21,25 @@ export interface Module {
 export interface Error {
   severity: number
   message: string
+}
+
+
+// STRUTTURA NODE PER WIDGET TREE PRIMENG
+// https://stackblitz.com/run?file=src%2Fservice%2Fnodeservice.ts
+// https://primeng.org/tree#controlled
+
+export interface TreePrimeNg {
+  key: string;
+  label: string;
+  data: string;
+  icon: string;
+  children?: TreePrimeNg[];
+}
+
+export interface ProjectInfo {
+  name: string;
+  groupId: string;
+  artifactId: string;
+  version: string;
+  scope: number;
 }
