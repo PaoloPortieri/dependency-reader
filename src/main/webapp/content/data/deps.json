@@ -13,7 +13,7 @@
       },
       {
         "artifactId": "Module Artifcact 2",
-        "dependencies": ["Module Artifcact 2", "Dependency artifact ID", "..."]
+        "dependencies": ["Dependency Artifcact 2", "Dependency artifact ID", "..."]
       }
     ],
     "errors": [

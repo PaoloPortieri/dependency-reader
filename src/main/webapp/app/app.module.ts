@@ -23,7 +23,9 @@ import { NavbarComponent } from './layouts/navbar/navbar.component';
 import { FooterComponent } from './layouts/footer/footer.component';
 import { PageRibbonComponent } from './layouts/profiles/page-ribbon.component';
 import { ErrorComponent } from './layouts/error/error.component';
-
+// import { TreeModule } from 'primeng/tree';
+// import { TreeSelectModule } from 'primeng/treeselect';
+// import { TreeTableModule } from 'primeng/treetable';
 @NgModule({
   imports: [
     BrowserModule,
@@ -35,6 +37,9 @@ import { ErrorComponent } from './layouts/error/error.component';
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: false }),
     HttpClientModule,
     NgxWebstorageModule.forRoot({ prefix: 'jhi', separator: '-', caseSensitive: true }),
+    // TreeModule,
+    // TreeSelectModule,
+    // TreeTableModule,
   ],
   providers: [
     Title,

@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { DepsRetrieverService } from 'app/services/deps-retriever.service';
-import { JsonRootArray } from './deps.model';
+import { JsonRootArray, TreePrimeNg } from './deps.model';
 
 @Component({
   template: `
@@ -11,7 +11,9 @@ import { JsonRootArray } from './deps.model';
             <div class="col-md-6 left-section">
                 <!-- Content for the left section -->
                 <h2>TREE Section</h2>
-                <pre>{{ jsonData }} </pre>
+                <!-- <pre>{{ jsonData | json }} </pre> -->
+
+                <p-tree *ngIf="treeData" [value]="treeData" class="w-full md:w-30rem" ></p-tree>
             </div>
 
             <!-- Right Section (50% width) -->
@@ -72,8 +74,9 @@ import { JsonRootArray } from './deps.model';
 export class DepReaderMainComponent implements OnInit {
 
   jsonData?: JsonRootArray;
-
-  constructor(private depsRetrieverService: DepsRetrieverService) {
+  treeData: TreePrimeNg[] | null = null;
+  selectedNode!: TreePrimeNg;
+  constructor(private depsRetrieverService: DepsRetrieverService, private cd: ChangeDetectorRef) {
     true
   }
 
@@ -81,6 +84,11 @@ export class DepReaderMainComponent implements OnInit {
     this.depsRetrieverService.load().subscribe((data: any) => {
       console.log("caricamento json:", data);
       this.jsonData = data;
+
+      this.treeData = this.depsRetrieverService.convertJsonRootArrayToPrimeNgTree(data);
+      console.log("caricamento data tree widget:", this.treeData);
+
+      this.cd.detectChanges();
     });
   }
 
