@@ -1,6 +1,6 @@
 // STRUTTURA JSON INPUT
 
-export type JsonRootArray = JsonRoot[]
+export type JsonRootArray = JsonRoot[];
 
 export interface JsonRoot {
   name: string;
@@ -10,7 +10,7 @@ export interface JsonRoot {
   scope: number;
   dependencies?: string[];
   modules?: Module[];
-  errors?: Error[];
+  errors?: ProjectError[];
 }
 
 export interface Module {
@@ -18,11 +18,10 @@ export interface Module {
   dependencies?: string[];
 }
 
-export interface Error {
+export interface ProjectError {
   severity: number;
   message: string;
 }
-
 
 // STRUTTURA NODE PER WIDGET TREE PRIMENG
 // https://stackblitz.com/run?file=src%2Fservice%2Fnodeservice.ts
