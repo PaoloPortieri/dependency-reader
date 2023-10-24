@@ -80,7 +80,7 @@ import { JsonRoot, JsonRootArray, ProjectError, TreePrimeNg } from './deps.model
             <h3 class="sticky-header">Errors</h3>
             <div class="scrollable-content">
               <div class="content-wrapper">
-                <ul *ngIf="selectedErrors; else noErrors">
+                <ul *ngIf="selectedErrors && selectedErrors.length > 0; else noErrors">
                   <li *ngFor="let error of selectedErrors">{{ error.message }}</li>
                 </ul>
                 <ng-template #noErrors>
