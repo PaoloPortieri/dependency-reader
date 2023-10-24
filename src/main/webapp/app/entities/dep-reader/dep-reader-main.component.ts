@@ -16,8 +16,9 @@ import { JsonRoot, JsonRootArray, ProjectError, TreePrimeNg } from './deps.model
           <input type="text" (input)="filterTree($event)" placeholder="Search project..." />
           <p-tree
             *ngIf="treeData"
-            (nodeSelect)="onProjectSelect($event)"
-            (nodeExpand)="onNodeExpand($event)"
+            selectionMode="single"
+            (onNodeSelect)="onNodeSelect($event)"
+            (onNodeExpand)="onNodeExpand($event)"
             [value]="treeData"
             class="w-full md:w-30rem"
           >
@@ -55,22 +56,22 @@ import { JsonRoot, JsonRootArray, ProjectError, TreePrimeNg } from './deps.model
         padding: 0;
       }
 
-      .left-section,
       .right-section {
+        background-color: #f0f0f0;
+        display: flex; // turn on flexbox
+        flex-direction: column; // stack children vertically
         height: 100vh;
       }
 
-      .right-section {
-        background-color: #f0f0f0;
-      }
-
       .right-subsection {
-        height: 33.33%;
+        flex-grow: 1; // allow boxes to grow if there's available space
+        flex-shrink: 0; // prevent boxes from shrinking
+        flex-basis: 33.33%; // default size
         border: 1px solid #ccc;
         padding: 10px;
+        overflow-y: auto; // Allow for scrolling if the content is too long
       }
 
-      /* Adjust styles for smaller screens */
       @media (max-width: 768px) {
         .left-section,
         .right-section {
@@ -78,7 +79,7 @@ import { JsonRoot, JsonRootArray, ProjectError, TreePrimeNg } from './deps.model
         }
 
         .right-subsection {
-          height: auto;
+          flex-basis: auto; // remove flex-basis constraint for smaller screens
         }
       }
     `,
@@ -119,7 +120,7 @@ export class DepReaderMainComponent implements OnInit {
     this.treeData = this.depsRetrieverService.convertJsonRootArrayToPrimeNgTree(filteredData);
   }
 
-  onProjectSelect(event: any): void {
+  onNodeSelect(event: any): void {
     console.log('Node clicked:', event.node);
     let selectedProjectName: string;
 
@@ -140,10 +141,6 @@ export class DepReaderMainComponent implements OnInit {
       this.selectedErrors = correspondingProject.errors;
       console.log('Selected Project Errors:', this.selectedErrors);
     }
-  }
-
-  onNodeClickedTest(event: any): void {
-    console.log('Tree clicked');
   }
 
   onNodeExpand(event: any): void {
