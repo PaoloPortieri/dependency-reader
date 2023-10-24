@@ -9,10 +9,6 @@ import { JsonRoot, JsonRootArray, ProjectError, TreePrimeNg } from './deps.model
       <div class="row">
         <!-- Left Section (50% width) -->
         <div class="col-md-6 left-section">
-          <!-- Content for the left section -->
-          <h2>TREE Section</h2>
-          <!-- <pre>{{ jsonData | json }} </pre> -->
-
           <input type="text" (input)="filterTree($event)" placeholder="Search project..." />
           <p-tree
             *ngIf="treeData"
@@ -21,29 +17,77 @@ import { JsonRoot, JsonRootArray, ProjectError, TreePrimeNg } from './deps.model
             (onNodeExpand)="onNodeExpand($event)"
             [value]="treeData"
             class="w-full md:w-30rem"
-          >
-          </p-tree>
+          ></p-tree>
         </div>
 
-        <!-- Right Section (50% width) -->
         <div class="col-md-6 right-section">
-          <!-- Right Subsections (33% height) -->
+          <!-- Lista progetto -->
           <div class="right-subsection">
-            <h3>Lista progetto</h3>
-            <!-- Content for subsection 1 -->
+            <h3 class="sticky-header">
+              <span>
+                {{ selectedProject?.name }}
+                <ng-container *ngIf="selectedProject">-</ng-container>
+                Project details
+              </span>
+            </h3>
+            <div class="scrollable-content">
+              <div class="content-wrapper">
+                <ul *ngIf="selectedProject; else noProject">
+                  <li>Name: {{ selectedProject.name }}</li>
+                  <li>Group ID: {{ selectedProject.groupId }}</li>
+                  <li>Artifact ID: {{ selectedProject.artifactId }}</li>
+                  <li>Version: {{ selectedProject.version }}</li>
+                  <li>Scope: {{ selectedProject.scope }}</li>
+                  <li>Error Count: {{ selectedProject.errors?.length || 0 }}</li>
+                  <li>
+                    Dependencies:
+                    <ul>
+                      <li *ngFor="let dependency of selectedProject.dependencies">{{ dependency }}</li>
+                    </ul>
+                  </li>
+                </ul>
+                <ng-template #noProject>
+                  <p>Select a project to view details.</p>
+                </ng-template>
+              </div>
+            </div>
           </div>
+
+          <!-- lista moduli -->
           <div class="right-subsection">
-            <h3>lista moduli</h3>
-            <!-- Content for subsection 2 -->
+            <h3 class="sticky-header">Submodules</h3>
+            <div class="scrollable-content">
+              <div class="content-wrapper">
+                <ul *ngIf="selectedProject && selectedProject.modules; else noModules">
+                  <li *ngFor="let module of selectedProject.modules">
+                    {{ module.artifactId }}
+                    <div *ngIf="module.dependencies && module.dependencies.length">
+                      <strong>Dependencies:</strong>
+                      <ul>
+                        <li *ngFor="let dependency of module.dependencies">{{ dependency }}</li>
+                      </ul>
+                    </div>
+                  </li>
+                </ul>
+                <ng-template #noModules>
+                  <p>No modules for the selected project.</p>
+                </ng-template>
+              </div>
+            </div>
           </div>
+
           <div class="right-subsection">
-            <h3>Lista errori</h3>
-            <ul *ngIf="selectedErrors; else noErrors">
-              <li *ngFor="let error of selectedErrors">{{ error.message }}</li>
-            </ul>
-            <ng-template #noErrors>
-              <p>No errors for selected project.</p>
-            </ng-template>
+            <h3 class="sticky-header">Errors</h3>
+            <div class="scrollable-content">
+              <div class="content-wrapper">
+                <ul *ngIf="selectedErrors; else noErrors">
+                  <li *ngFor="let error of selectedErrors">{{ error.message }}</li>
+                </ul>
+                <ng-template #noErrors>
+                  <p>No errors for selected project.</p>
+                </ng-template>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -58,18 +102,23 @@ import { JsonRoot, JsonRootArray, ProjectError, TreePrimeNg } from './deps.model
 
       .right-section {
         background-color: #f0f0f0;
-        display: flex; // turn on flexbox
-        flex-direction: column; // stack children vertically
+        display: flex;
+        flex-direction: column;
         height: 100vh;
       }
 
       .right-subsection {
-        flex-grow: 1; // allow boxes to grow if there's available space
-        flex-shrink: 0; // prevent boxes from shrinking
-        flex-basis: 33.33%; // default size
+        background-color: #e0e0e0;
         border: 1px solid #ccc;
+        flex: 1; /* Equally distribute space between right-subsections */
+        height: calc(33.33vh - 42px);
+        position: relative; /* Necessary for sticky positioning of headers */
+      }
+
+      .scrollable-content {
+        height: calc(100% - 40px);
+        overflow-y: auto;
         padding: 10px;
-        overflow-y: auto; // Allow for scrolling if the content is too long
       }
 
       @media (max-width: 768px) {
@@ -78,8 +127,16 @@ import { JsonRoot, JsonRootArray, ProjectError, TreePrimeNg } from './deps.model
           height: auto;
         }
 
-        .right-subsection {
-          flex-basis: auto; // remove flex-basis constraint for smaller screens
+        .content-wrapper {
+          padding: 10px;
+        }
+
+        .sticky-header {
+          background-color: #f0f0f0;
+          z-index: 2;
+          position: sticky;
+          top: 0;
+          padding: 10px;
         }
       }
     `,
@@ -90,10 +147,9 @@ export class DepReaderMainComponent implements OnInit {
   treeData: TreePrimeNg[] | null = null;
   selectedNode!: TreePrimeNg;
   selectedErrors?: ProjectError[];
+  selectedProject?: JsonRoot;
 
-  constructor(private depsRetrieverService: DepsRetrieverService, private cd: ChangeDetectorRef) {
-    true;
-  }
+  constructor(private depsRetrieverService: DepsRetrieverService, private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.depsRetrieverService.load().subscribe((data: any) => {
@@ -121,14 +177,11 @@ export class DepReaderMainComponent implements OnInit {
   }
 
   onNodeSelect(event: any): void {
-    console.log('Node clicked:', event.node);
     let selectedProjectName: string;
 
     if (event.node.data === 'PROGETTI') {
-      // Check if the selected node represents a project
       selectedProjectName = event.node.label;
     } else {
-      // Assume you're somewhere in the children hierarchy. You'd need to traverse up to get to the root project node
       let currentNode = event.node;
       while (currentNode.data !== 'PROGETTI' && currentNode.parent) {
         currentNode = currentNode.parent;
@@ -139,14 +192,11 @@ export class DepReaderMainComponent implements OnInit {
     const correspondingProject: JsonRoot | undefined = this.jsonData?.find(proj => proj.name === selectedProjectName);
     if (correspondingProject) {
       this.selectedErrors = correspondingProject.errors;
-      console.log('Selected Project Errors:', this.selectedErrors);
+      this.selectedProject = correspondingProject;
     }
   }
 
   onNodeExpand(event: any): void {
     console.log('Node expanded:', event.node);
-  }
-  onButtonClick(): void {
-    console.log('Button was clicked');
   }
 }

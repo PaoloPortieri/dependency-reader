@@ -26,40 +26,22 @@ export class DepsRetrieverService {
 
     input.forEach((proj, ind_proj) => {
       let moduleNodeList: TreePrimeNg[] = [];
-
-      //console.log("🚀 ~ proj:", proj);
       const projNode = this.createProjPrimeNgNode(proj, ind_proj);
 
       (proj.modules ?? []).forEach((module, ind_module) => {
-        //console.log("🚀 ~ module:", module);
         const moduleNode = this.createModulePrimeNgNode(module, ind_proj, ind_module);
         let moduleDepsNodeList: TreePrimeNg[] = [];
         (module.dependencies ?? []).forEach((deps, ind_deps) => {
-          //console.log("🚀 ~ deps:", deps);
           const depNode = this.createDepPrimeNgNode(deps, ind_proj, ind_module, ind_deps);
-
           moduleDepsNodeList = [...moduleDepsNodeList, depNode];
         });
 
         // attach moduleDepsNodeList to moduleNode
         moduleNode.children = moduleDepsNodeList;
-
         moduleNodeList = [...moduleNodeList, moduleNode];
       });
       // attach moduleNodes to projNode
       projNode.children = moduleNodeList;
-      let errorsNodeList: TreePrimeNg[] = [];
-
-      (proj.errors ?? []).forEach((error, ind_errs) => {
-        //console.log("🚀 ~ error:", error);
-        const errNode = this.createErrorPrimeNgNode(error, ind_proj, ind_errs);
-
-        errorsNodeList = [...errorsNodeList, errNode];
-      });
-
-      // attach errorNodes to pojNode
-      projNode.children = [...projNode.children, ...errorsNodeList];
-
       projectNodeList = [...projectNodeList, projNode];
     });
 
@@ -106,67 +88,3 @@ export class DepsRetrieverService {
     };
   }
 }
-
-/*
-proj -> deps
-proj -> module -> deps
-proj -> errors
-{
-  key: '0',
-  label: 'Project Name',  // nome progetto
-  data: 'PROGETTI',
-  icon: 'pi pi-fw pi-inbox',
-  children: [{
-    key: '0-0',
-    label: 'Module Artifcact ID',  // nome modulo
-    data: 'MODULI',
-    icon: 'pi pi-fw pi-inbox',
-
-    children: [{
-      key: '0-0-0',
-      label: 'Dependency artifact ID',  // nome dipendenza
-      data: 'DIPENDENZE',
-      icon: 'pi pi-fw pi-inbox',
-    },
-    {
-      key: '0-0-1',
-      label: 'Dependency artifact 2',  // nome dipendenza
-      data: 'DIPENDENZE',
-      icon: 'pi pi-fw pi-inbox',
-    }]
-    }
-  ]
-      {
-
-        */
-/*
-
-[
-  {
-    "name": "Project Name",
-    "groupId": "Group ID",
-    "artifactId": "Artifact ID",
-    "version": "version",
-    "scope": 0,
-    "dependencies": ["Dependency artifact ID", "Dependency artifact ID", "..."],
-    "modules": [
-      {
-        "artifactId": "Module Artifcact ID",
-        "dependencies": ["Dependency artifact ID", "Dependency artifact ID", "..."]
-      }
-    ],
-    "errors": [
-      {
-        "severity": 1,
-        "message": "Error Message"
-      }
-    ]
-  }
-]
-
-Severity codes:
-    1 - Warning (Versioni delle librerie (specialmente terze parti) non coerenti tra i progetti)
-    2 - Error (Dipendenze circolari)
-    3 - Fatal Error (Il progetto è dipendente da progetti che in ordine di scope vengono compilati in seguito)
-
-*/
