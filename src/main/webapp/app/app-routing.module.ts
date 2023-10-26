@@ -25,8 +25,15 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access.service'
           loadChildren: () => import('./login/login.module').then(m => m.LoginModule),
         },
         {
+          // Update this route to redirect to 'dep-reader'
           path: '',
-          loadChildren: () => import(`./entities/entity-routing.module`).then(m => m.EntityRoutingModule),
+          redirectTo: '/dep-reader',
+          pathMatch: 'full',
+        },
+        {
+          // Add route for 'dep-reader'
+          path: 'dep-reader',
+          loadChildren: () => import('./entities/dep-reader/dep-reader.module').then(m => m.DepReaderModule),
         },
         navbarRoute,
         ...errorRoute,
@@ -37,4 +44,4 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access.service'
   ],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

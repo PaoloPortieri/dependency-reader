@@ -17,6 +17,8 @@ export class DepsRetrieverService {
 
   load(): Observable<any> {
     return this.http.get('content/data/deps.json');
+    // fetch data from the spring boot wrapper like this:
+    // return this.http.get('http://localhost:8080/getDependencyAnalysis');
   }
 
   convertJsonRootArrayToPrimeNgTree(input?: JsonRootArray): TreePrimeNg[] | null {
